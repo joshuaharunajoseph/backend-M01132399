@@ -33,6 +33,16 @@ app.get('/images/:imageName', (req, res) => {
   });
 });
 
+// get all lessons
+app.get('/lessons', async (req, res) => {
+  try {
+    const lessons = await db.collection('lessons').find({}).toArray();
+    res.json(lessons);
+  } catch (err) {
+    res.status(500).json({ error: 'Could not fetch lessons' });
+  }
+});
+
 // connect to database and start server
 async function start() {
   try {
