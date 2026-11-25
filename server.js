@@ -16,6 +16,11 @@ let db;
 app.use(cors());
 app.use(express.json());
 
+// root health check route
+app.get('/', (req, res) => {
+  res.json({ message: 'Lessons API is active', status: 'OK' });
+});
+
 // logger middleware: logs incoming requests
 app.use((req, res, next) => {
   console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
