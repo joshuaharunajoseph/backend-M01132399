@@ -55,6 +55,28 @@ app.post('/orders', async (req, res) => {
   }
 });
 
+// update lesson space or attributes
+app.put('/lessons/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updates = req.body;
+    delete updates._id;
+
+    const result = await db.collection('lessons').updateOne(
+      { _id: new ObjectId(id) },
+      { $set: updates }
+    );
+
+    if (result.matchedCount === 0) {
+      return res.status(404).json({ error: 'Lesson not found' });
+    }
+
+    res.json({ message: 'Lesson updated', modifiedCount: result.modifiedCount });
+  } catch (err) {
+    res.status(500).json({ error: 'Could not update lesson' });
+  }
+});
+
 // connect to database and start server
 async function start() {
   try {
