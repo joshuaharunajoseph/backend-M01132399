@@ -43,6 +43,18 @@ app.get('/lessons', async (req, res) => {
   }
 });
 
+// save new order
+app.post('/orders', async (req, res) => {
+  try {
+    const { name, phone, lessonIDs, space } = req.body;
+    const order = { name, phone, lessonIDs, space, date: new Date() };
+    const result = await db.collection('orders').insertOne(order);
+    res.status(201).json({ message: 'Order submitted', orderId: result.insertedId });
+  } catch (err) {
+    res.status(500).json({ error: 'Could not save order' });
+  }
+});
+
 // connect to database and start server
 async function start() {
   try {
