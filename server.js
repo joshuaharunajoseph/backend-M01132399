@@ -59,6 +59,9 @@ app.post('/orders', async (req, res) => {
 app.put('/lessons/:id', async (req, res) => {
   try {
     const { id } = req.params;
+    if (!ObjectId.isValid(id)) {
+      return res.status(400).json({ error: 'Invalid lesson ID' });
+    }
     const updates = req.body;
     delete updates._id;
 
