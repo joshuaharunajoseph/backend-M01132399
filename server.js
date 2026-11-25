@@ -3,9 +3,14 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const fs = require('fs');
+const { MongoClient, ObjectId } = require('mongodb');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const MONGO_URI = process.env.MONGO_URI;
+const DB_NAME = process.env.DB_NAME;
+
+let db;
 
 // enable cors and parse json body
 app.use(cors());
@@ -28,6 +33,21 @@ app.get('/images/:imageName', (req, res) => {
   });
 });
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+// connect to database and start server
+async function start() {
+  try {
+    const client = new MongoClient(MONGO_URI);
+    await client.connect();
+    console.log('Connected to MongoDB');
+    db = client.db(DB_NAME);
+
+    app.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
+    });
+  } catch (err) {
+    console.error('Database connection failed:', err);
+    process.exit(1);
+  }
+}
+
+start();
