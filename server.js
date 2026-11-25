@@ -80,6 +80,11 @@ app.put('/lessons/:id', async (req, res) => {
   }
 });
 
+// 404 handler for unmatched routes
+app.use((req, res) => {
+  res.status(404).json({ error: 'Route not found' });
+});
+
 // connect to database and start server
 async function start() {
   try {
